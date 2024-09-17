@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,7 +17,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+
+        let newWindow = UIWindow(frame: windowScene.screen.bounds)
+        newWindow.windowScene = windowScene
+
+        let browseView = CategoriesView()
+        let browseViewController = UIHostingController(rootView: browseView)
+        browseViewController.tabBarItem = UITabBarItem(title: "Categories", image: UIImage(systemName: "square.grid.2x2.fill"), tag: 0)
+
+        let desertMealsGridView = MealGridListView(category: "Dessert")
+        let desertMealsGridViewController = UIHostingController(rootView: desertMealsGridView)
+        desertMealsGridViewController.tabBarItem = UITabBarItem(title: "Dessert", image: UIImage(systemName: "carrot.fill"), tag: 1)
+
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [browseViewController, desertMealsGridViewController]
+
+        // Set the TabBarController as the root view controller
+        newWindow.rootViewController = tabBarController
+        newWindow.makeKeyAndVisible()
+        window = newWindow
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
