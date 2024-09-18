@@ -57,6 +57,15 @@ extension MealAPI: Endpoint {
 
 struct MealListResponse: Decodable {
     let meals: [Meal]
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        meals = try container.decodeIfPresent([Meal].self, forKey: .meals) ?? []
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case meals
+    }
 }
 
 struct MealDetailResponse: Decodable {

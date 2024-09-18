@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Meal: Decodable {
+struct Meal: Decodable, Identifiable, Hashable {
 
     let id: String
     let name: String
@@ -19,15 +19,7 @@ struct Meal: Decodable {
     let youtubeURL: String?
     let source: String?
 
-    let ingredients: [String]
-    let measurements: [String]
-
-    // Combine ingredient and ilter out empty pairs
-    var ingredientMeasurements: [String] {
-        return zip(ingredients, measurements)
-            .filter { !$0.0.isEmpty && !$0.1.isEmpty }
-            .map { "\($0.1) \($0.0)" }
-    }
+    let ingredients: [Ingredient]
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: StringCodingKey.self)
@@ -43,15 +35,19 @@ struct Meal: Decodable {
         source = try? container.decode(String.self, forKey: StringCodingKey(stringValue: "strSource"))
 
         // ingredients and measurements
-        ingredients = (1...20).compactMap { index in
+        let ingredientNames = (1...20).compactMap { index in
             let key = StringCodingKey(stringValue: "strIngredient\(index)")
             return try? container.decodeIfPresent(String.self, forKey: key)
         }.filter { !$0.isEmpty }
 
-        measurements = (1...20).compactMap { index in
+        let ingredientMeasurements = (1...20).compactMap { index in
             let key = StringCodingKey(stringValue: "strMeasure\(index)")
             return try? container.decodeIfPresent(String.self, forKey: key)
         }.filter { !$0.isEmpty }
+
+        ingredients = zip(ingredientNames, ingredientMeasurements).map { name, measurement in
+            Ingredient(name: name, measurement: measurement)
+        }
     }
 
     struct StringCodingKey: CodingKey {
@@ -65,5 +61,13 @@ struct Meal: Decodable {
         init?(intValue: Int) {
             return nil
         }
+    }
+
+    static func == (lhs: Meal, rhs: Meal) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

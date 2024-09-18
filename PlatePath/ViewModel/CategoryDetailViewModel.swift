@@ -27,25 +27,29 @@ class CategoryDetailViewModel: ObservableObject {
         Task {
             do {
                 guard let categoryName = category?.name else {
-                    DispatchQueue.main.async {
-                        self.errorMessage = "Invalid category."
-                    }
+                    await updateUIWithError("Invalid category")
                     return
                 }
 
                 // Fetch meals for the selected category
                 let fetchedMeals = try await mealService.getMeals(forCategory: categoryName)
-
-                DispatchQueue.main.async {
-                    self.meals = fetchedMeals.sorted { $0.name < $1.name }
-                    self.isLoading = false
-                }
+                await updateUIWithResults(fetchedMeals)
             } catch {
-                DispatchQueue.main.async {
-                    self.errorMessage = "Failed to load meals: \(error.localizedDescription)"
-                    self.isLoading = false
-                }
+                await updateUIWithError("Failed to load meals: \(error.localizedDescription)")
             }
         }
+    }
+
+    @MainActor
+    private func updateUIWithResults(_ fetchedMeals: [Meal]) {
+        self.meals = fetchedMeals
+        self.isLoading = false
+        self.errorMessage = nil
+    }
+
+    @MainActor
+    private func updateUIWithError(_ errorMessage: String) {
+        self.errorMessage = errorMessage
+        self.isLoading = false
     }
 }

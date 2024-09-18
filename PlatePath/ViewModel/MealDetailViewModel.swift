@@ -26,16 +26,24 @@ class MealDetailViewModel: ObservableObject {
         Task {
             do {
                 let meal = try await mealService.getMealDetail(mealID: mealID)
-                DispatchQueue.main.async {
-                    self.mealDetail = meal
-                    self.isLoading = false
-                }
+                await updateUIWithResults(meal)
             } catch {
-                DispatchQueue.main.async {
-                    self.errorMessage = "Failed to load meal details: \(error.localizedDescription)"
-                    self.isLoading = false
-                }
+                await updateUIWithError("Failed to load meal details: \(error.localizedDescription)")
             }
         }
     }
+
+    @MainActor
+    private func updateUIWithResults(_ meal: Meal) {
+        self.mealDetail = meal
+        self.isLoading = false
+        self.errorMessage = nil
+    }
+
+    @MainActor
+    private func updateUIWithError(_ errorMessage: String) {
+        self.errorMessage = errorMessage
+        self.isLoading = false
+    }
+
 }

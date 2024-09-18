@@ -30,8 +30,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let desertMealsGridViewController = UIHostingController(rootView: desertMealsGridView)
         desertMealsGridViewController.tabBarItem = UITabBarItem(title: "Dessert", image: UIImage(systemName: "carrot.fill"), tag: 1)
 
+        let mealSearchView = SearchView()
+        let mealSearchViewController = UIHostingController(rootView: mealSearchView)
+        mealSearchViewController.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 2)
+
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [browseViewController, desertMealsGridViewController]
+        tabBarController.viewControllers = [browseViewController, desertMealsGridViewController, mealSearchViewController]
 
         // Set the TabBarController as the root view controller
         newWindow.rootViewController = tabBarController

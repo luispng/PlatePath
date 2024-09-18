@@ -23,33 +23,33 @@ struct MealDetailView: View {
                     VStack(spacing: 20) {
                         // Header Section
                         MealDetailHeaderView(mealDetail: mealDetail)
-                        
+
                         // Category Section
                         if let categoryName = mealDetail.category, !categoryName.isEmpty {
-                            MealCategoryView(categoryName: categoryName)
+                            MealCategorySectionView(categoryName: categoryName)
                         }
-                        
+
                         // Tags Section
                         if let tags = mealDetail.tags, !tags.isEmpty {
-                            MealTagsView(tags: tags)
+                            MealTagsSectionView(tags: tags)
                         }
-                        
+
                         Divider().padding(.horizontal)
-                        
+
                         // Ingredients Section
-                        MealIngredientsView(ingredients: mealDetail.ingredientMeasurements)
-                        
+                        MealIngredientsSectionView(ingredients: mealDetail.ingredients)
+
                         Divider().padding(.horizontal)
-                        
+
                         // Instructions Section
-                        MealInstructionsView(instructions: mealDetail.instructions)
-                        
+                        MealInstructionsSectionView(instructions: mealDetail.instructions)
+
                         Divider().padding(.horizontal)
-                        
+
                         // YouTube Video Section
-                        if let strYoutube = mealDetail.youtubeURL, 
+                        if let strYoutube = mealDetail.youtubeURL,
                             let youtubeURL = URL(string: strYoutube) {
-                            MealYouTubeView(youtubeURL: youtubeURL)
+                            MealYouTubeSectionView(youtubeURL: youtubeURL)
                         }
                     }
                     .padding(.bottom, 20)
@@ -72,10 +72,10 @@ struct MealDetailView: View {
     }
 }
 
-// MARK: - MealCategoryView
-struct MealCategoryView: View {
+// MARK: - MealCategorySectionView
+struct MealCategorySectionView: View {
     let categoryName: String
-    
+
     var body: some View {
         Text("Category: \(categoryName)")
             .font(.callout)
@@ -85,36 +85,16 @@ struct MealCategoryView: View {
     }
 }
 
-// MARK: - MealInstructionsView
-struct MealInstructionsView: View {
-    let instructions: String?
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Instructions")
-                .font(.system(.title3, design: .serif))
-                .underline()
-                .padding(.bottom, 8)
-            
-            Text(instructions ?? "No instructions available.")
-                .font(.system(size: 14))
-                .lineSpacing(6)
-                .padding(.horizontal, 10)
-        }
-        .padding(.horizontal, 20)
-    }
-}
-
-// MARK: - MealYouTubeView
-struct MealYouTubeView: View {
+// MARK: - MealYouTubeSectionView
+struct MealYouTubeSectionView: View {
     let youtubeURL: URL
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Watch Video")
                 .font(.headline)
                 .padding(.bottom, 5)
-            
+
             Link(destination: youtubeURL) {
                 HStack {
                     Image(systemName: "play.circle.fill")

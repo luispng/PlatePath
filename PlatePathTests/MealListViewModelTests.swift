@@ -15,9 +15,12 @@ class MealListViewModelTests: XCTestCase {
 
     func testFetchMealsSuccess() throws {
         let mockMealService = MockMealService()
-        mockMealService.loadMeals(fromFile: "meals")
-
+        
         let viewModel = MealListViewModel(mealService: mockMealService)
+
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertEqual(viewModel.meals.count, 0)
 
         let mealsExpectation = XCTestExpectation(description: "Wait for meals to load")
         let isLoadingExpectation = XCTestExpectation(description: "Wait for isLoading to become false")
@@ -98,6 +101,7 @@ class MockMealService: MealServiceProtocol {
         if shouldThrowError {
             throw URLError(.badServerResponse)
         }
+        loadMeals(fromFile: "meals")
         return mealsToReturn
     }
 
@@ -118,27 +122,7 @@ class MockMealService: MealServiceProtocol {
 
     // Helper to decode JSON data from a file
     func loadMeals(fromFile fileName: String) {
-        guard let jsonData = loadJSON(fromFile: fileName) else {
-            print("Failed to load \(fileName).json")
-            return
-        }
-        let decoder = JSONDecoder()
-        do {
-            let response = try decoder.decode(MealListResponse.self, from: jsonData)
-            print("Successfully decoded meals: \(response.meals.count)")
-            mealsToReturn = response.meals
-        } catch {
-            print("Failed to decode JSON: \(error)")
-        }
+        mealsToReturn = TestHelper.loadMeals(fromFile: fileName)!
     }
 
-    // helper
-    private func loadJSON(fromFile fileName: String) -> Data? {
-        let bundle = Bundle(for: type(of: self))
-        if let url = bundle.url(forResource: fileName, withExtension: "json") {
-            return try? Data(contentsOf: url)
-        }
-        print("File not found: \(fileName).json")
-        return nil
-    }
 }

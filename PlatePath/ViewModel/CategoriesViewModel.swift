@@ -26,16 +26,23 @@ class CategoriesViewModel: ObservableObject {
         Task {
             do {
                 let fetchedCategories = try await categoryService.getCategories()
-                DispatchQueue.main.async {
-                    self.categories = fetchedCategories
-                    self.isLoading = false
-                }
+                await updateUIWithResults(fetchedCategories)
             } catch {
-                DispatchQueue.main.async {
-                    self.errorMessage = "Failed to load categories: \(error.localizedDescription)"
-                    self.isLoading = false
-                }
+                await updateUIWithError("Failed to load categories: \(error.localizedDescription)")
             }
         }
+    }
+
+    @MainActor
+    private func updateUIWithResults(_ categories: [Category]) {
+        self.categories = categories
+        self.isLoading = false
+        self.errorMessage = nil
+    }
+
+    @MainActor
+    private func updateUIWithError(_ errorMessage: String) {
+        self.errorMessage = errorMessage
+        self.isLoading = false
     }
 }

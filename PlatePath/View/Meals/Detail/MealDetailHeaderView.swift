@@ -38,7 +38,6 @@ struct MealDetailHeaderView: View {
                             Text(area)
                         }
                         .font(.headline)
-                        .fontWeight(.regular)
                         .foregroundColor(.white)
                     }
                     

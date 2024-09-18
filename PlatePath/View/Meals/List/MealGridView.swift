@@ -33,7 +33,7 @@ struct MealGridListView: View {
                 } else {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 5) {
-                            ForEach(viewModel.meals, id: \.id) { meal in
+                            ForEach(viewModel.meals) { meal in
                                 NavigationLink(destination: MealDetailView(mealID: meal.id)) {
                                     MealGridCardView(meal: meal)
                                 }

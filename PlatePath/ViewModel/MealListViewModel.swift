@@ -26,18 +26,24 @@ class MealListViewModel: ObservableObject {
         Task {
             do {
                 let fetchedMeals = try await mealService.getMeals(forCategory: category)
-                DispatchQueue.main.async {
-                    self.meals = fetchedMeals.sorted { $0.name < $1.name }
-                    self.isLoading = false
-                }
+                await updateUIWithResults(fetchedMeals)
             } catch {
-                DispatchQueue.main.async {
-                    print(error)
-                    self.errorMessage = "Failed to load meals: \(error.localizedDescription)"
-                    self.isLoading = false
-                }
+                await updateUIWithError("Failed to load meals: \(error.localizedDescription)")
             }
         }
+    }
+
+    @MainActor
+    private func updateUIWithResults(_ fetchedMeals: [Meal]) {
+        self.meals = fetchedMeals.sorted { $0.name < $1.name }
+        self.isLoading = false
+        self.errorMessage = nil
+    }
+
+    @MainActor
+    private func updateUIWithError(_ errorMessage: String) {
+        self.errorMessage = errorMessage
+        self.isLoading = false
     }
 
 }

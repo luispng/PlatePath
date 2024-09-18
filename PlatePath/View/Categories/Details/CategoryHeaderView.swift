@@ -31,10 +31,11 @@ struct CategoryHeaderView: View {
                     .overlay(Text("No Image").foregroundColor(.gray))
             }
             Text(category.description)
-                .font(.caption)
+                .font(.footnote)
                 .foregroundColor(.secondary)
                 .padding([.leading, .trailing], 20)
                 .multilineTextAlignment(.center)
+                .lineLimit(4)
         }
         .padding(.bottom, 20)
     }
