@@ -14,8 +14,8 @@
 <div style="display: flex; justify-content: space-around;">
   <img src="Screenshots/screenshot1.png" alt="Home Screen" width="220"/>
   <img src="Screenshots/screenshot2.png" alt="Meals View" width="220"/>
-  <img src="Screenshots/screenshot2.png" alt="Detail View" width="220"/>
-  <img src="Screenshots/screenshot2.png" alt="Search" width="220"/>
+  <img src="Screenshots/screenshot3.png" alt="Detail View" width="220"/>
+  <img src="Screenshots/screenshot4.png" alt="Search" width="220"/>
 </div>
 
 ## API Information
