@@ -11,7 +11,12 @@
 
 ## Screenshots
 
-- Coming soon!
+<div style="display: flex; justify-content: space-around;">
+  <img src="screenshots/screenshot1.png" alt="Home Screen" width="250"/>
+  <img src="screenshots/screenshot2.png" alt="Meals View" width="250"/>
+  <img src="screenshots/screenshot2.png" alt="Detail View" width="250"/>
+  <img src="screenshots/screenshot2.png" alt="Search" width="250"/>
+</div>
 
 ## API Information
 
